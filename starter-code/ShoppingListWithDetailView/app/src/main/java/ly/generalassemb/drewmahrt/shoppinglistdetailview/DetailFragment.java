@@ -30,6 +30,7 @@ public class DetailFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         TextView nameView = (TextView) view.findViewById(R.id.detail_name);
         TextView descView = (TextView) view.findViewById(R.id.detail_description);
         TextView catView = (TextView)view.findViewById(R.id.detail_category);

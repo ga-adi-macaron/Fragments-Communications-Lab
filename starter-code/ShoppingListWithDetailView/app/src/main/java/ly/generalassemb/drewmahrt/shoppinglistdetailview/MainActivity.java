@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements ShoppingListFragm
         Fragment shoppingListFragment = ShoppingListFragment.newInstance(null, this);
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,shoppingListFragment).commit();
 
-
     }
 
     @Override
@@ -39,5 +38,10 @@ public class MainActivity extends AppCompatActivity implements ShoppingListFragm
 
         Fragment fragment = DetailFragment.newInstance(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
+        FrameLayout fragContainer = (FrameLayout) findViewById(R.id.fragment_container);
+        float horizontalPos = fragContainer.getX(); //Get the x coordinate for fragcontainer.
+        fragContainer.setTranslationX(1000); //Put fragcontainer offscreen
+        fragContainer.animate().translationX(horizontalPos).setDuration(300); //Slide it into view back to where it started.
+
     }
 }

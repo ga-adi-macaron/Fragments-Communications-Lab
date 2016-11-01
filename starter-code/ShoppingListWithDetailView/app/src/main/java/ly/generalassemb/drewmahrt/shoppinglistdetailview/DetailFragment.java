@@ -29,6 +29,7 @@ public class DetailFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ShoppingItem item = ShoppingSQLiteOpenHelper.getInstance(view.getContext()).getShoppingItemById(getArguments().getInt("id"));
 
 
         TextView nameView = (TextView) view.findViewById(R.id.detail_name);
@@ -36,10 +37,15 @@ public class DetailFragment extends Fragment {
         TextView catView = (TextView)view.findViewById(R.id.detail_category);
         TextView priceView = (TextView)view.findViewById(R.id.detail_price);
 
+        //This was done with a bundle, after rereading the requirements realized the details weren't supposed to be passed by a bundle(intent?)?
+//        nameView.setText(getArguments().getString("name"));
+//        descView.setText(getArguments().getString("description"));
+//        catView.setText(getArguments().getString("category"));
+//        priceView.setText(getArguments().getString("price"));
 
-        nameView.setText(getArguments().getString("name"));
-        descView.setText(getArguments().getString("description"));
-        catView.setText(getArguments().getString("category"));
-        priceView.setText(getArguments().getString("price"));
+        nameView.setText(item.getName());
+        descView.setText(item.getDescription());
+        catView.setText(item.getDescription());
+        priceView.setText(item.getPrice());
     }
 }

@@ -45,10 +45,11 @@ public class MainActivity extends AppCompatActivity implements ShoppingListFragm
     public void onShoppingListClick(int position) {
         Bundle bundle = new Bundle();
         ShoppingItem shoppingItem = ShoppingSQLiteOpenHelper.getInstance(this).getShoppingList().get(position);
-        bundle.putString("name", shoppingItem.getName());
-        bundle.putString("category", shoppingItem.getType());
-        bundle.putString("price", shoppingItem.getPrice());
-        bundle.putString("description", shoppingItem.getDescription());
+        bundle.putInt("id", shoppingItem.getId());
+//        bundle.putString("name", shoppingItem.getName());
+//        bundle.putString("category", shoppingItem.getType());
+//        bundle.putString("price", shoppingItem.getPrice());
+//        bundle.putString("description", shoppingItem.getDescription());
 
         Fragment fragment = DetailFragment.newInstance(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();

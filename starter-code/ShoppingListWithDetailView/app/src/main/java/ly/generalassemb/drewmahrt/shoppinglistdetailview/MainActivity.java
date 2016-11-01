@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 import java.util.List;
@@ -12,10 +14,12 @@ import java.util.List;
 import ly.generalassemb.drewmahrt.shoppinglistdetailview.setup.DBAssetHelper;
 
 public class MainActivity extends AppCompatActivity implements ShoppingListFragment.onShoppingListClickListener {
+    Button backButt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         //Ignore the two lines below, they are for setup
         DBAssetHelper dbSetup = new DBAssetHelper(MainActivity.this);
@@ -24,6 +28,16 @@ public class MainActivity extends AppCompatActivity implements ShoppingListFragm
         //Setup the RecyclerView
         Fragment shoppingListFragment = ShoppingListFragment.newInstance(null, this);
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,shoppingListFragment).commit();
+
+        backButt = (Button)findViewById(R.id.backbutton);
+        backButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.setVisibility(View.INVISIBLE);
+                Fragment shoppingListFragment = ShoppingListFragment.newInstance(null, MainActivity.this);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,shoppingListFragment).commit();
+            }
+        });
 
     }
 
@@ -39,9 +53,8 @@ public class MainActivity extends AppCompatActivity implements ShoppingListFragm
         Fragment fragment = DetailFragment.newInstance(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
         FrameLayout fragContainer = (FrameLayout) findViewById(R.id.fragment_container);
-        float horizontalPos = fragContainer.getX(); //Get the x coordinate for fragcontainer.
         fragContainer.setTranslationX(1000); //Put fragcontainer offscreen
-        fragContainer.animate().translationX(horizontalPos).setDuration(300); //Slide it into view back to where it started.
-
+        fragContainer.animate().translationXBy(-1000).setDuration(300);//Slide it into view back to where it started.
+        backButt.setVisibility(View.VISIBLE); //Makes back button usable after item selection.
     }
 }

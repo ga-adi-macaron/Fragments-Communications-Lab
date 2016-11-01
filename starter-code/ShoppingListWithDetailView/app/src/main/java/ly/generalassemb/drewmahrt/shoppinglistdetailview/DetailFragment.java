@@ -41,6 +41,5 @@ public class DetailFragment extends Fragment {
         descView.setText(getArguments().getString("description"));
         catView.setText(getArguments().getString("category"));
         priceView.setText(getArguments().getString("price"));
-
     }
 }

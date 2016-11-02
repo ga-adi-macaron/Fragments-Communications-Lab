@@ -1,15 +1,12 @@
 package ly.generalassemb.drewmahrt.shoppinglistdetailview;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-
-import java.util.List;
 
 import ly.generalassemb.drewmahrt.shoppinglistdetailview.setup.DBAssetHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GroceryListFragment.OnGrocerySelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,16 +17,23 @@ public class MainActivity extends AppCompatActivity {
         DBAssetHelper dbSetup = new DBAssetHelper(MainActivity.this);
         dbSetup.getReadableDatabase();
 
-        //Setup the RecyclerView
-        RecyclerView shoppingListRecyclerView = (RecyclerView) findViewById(R.id.shopping_list_recyclerview);
+        Fragment groceryListFragment = GroceryListFragment.newInstance(null, this);
 
-        ShoppingSQLiteOpenHelper db = ShoppingSQLiteOpenHelper.getInstance(this);
-        List<ShoppingItem> shoppingList = db.getShoppingList();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, groceryListFragment)
+                .commit();
+    }
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+    @Override
+    public void onGrocerySelected(int id) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(DetailFragment.ITEM_ID_KEY, id);
+        Fragment detailFragment = DetailFragment.newInstance(bundle);
 
-        shoppingListRecyclerView.setLayoutManager(linearLayoutManager);
-        shoppingListRecyclerView.setAdapter(new ShoppingListAdapter(shoppingList));
-
+        getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(null)
+                .replace(R.id.fragment_container, detailFragment)
+                .commit();
     }
 }

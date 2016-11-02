@@ -104,6 +104,27 @@ public class ShoppingSQLiteOpenHelper extends SQLiteOpenHelper {
         return shoppingItems;
     }
 
+    public List<String> shoppingItemNames() {
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.query(SHOPPING_LIST_TABLE_NAME,
+                new String[]{COL_ITEM_NAME},
+                null,
+                null,
+                null,
+                null,
+                null);
+        List<String> result = new ArrayList<>();
+        if(cursor.moveToFirst()) {
+            while(!cursor.isAfterLast()) {
+                result.add(cursor.getString(cursor.getColumnIndex(COL_ITEM_NAME)));
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        return result;
+    }
+
     public ShoppingItem getShoppingItemById(int id) {
         SQLiteDatabase db = getReadableDatabase();
 

@@ -1,5 +1,7 @@
 package ly.generalassemb.drewmahrt.shoppinglistdetailview;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,27 +11,38 @@ import java.util.List;
 
 import ly.generalassemb.drewmahrt.shoppinglistdetailview.setup.DBAssetHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ListFragment.OnItemSelectedListener {
+
+    public static final String NAME_KEY = "name";
+    public static final String DESCRIPTION_KEY = "description";
+    public static final String PRICE_KEY = "price";
+    public static final String TYPE_KEY = "type";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Ignore the two lines below, they are for setup
         DBAssetHelper dbSetup = new DBAssetHelper(MainActivity.this);
         dbSetup.getReadableDatabase();
 
-        //Setup the RecyclerView
-        RecyclerView shoppingListRecyclerView = (RecyclerView) findViewById(R.id.shopping_list_recyclerview);
+        Fragment fragment = ListFragment.newInstance(null, this);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, fragment).commit();
+    }
 
-        ShoppingSQLiteOpenHelper db = ShoppingSQLiteOpenHelper.getInstance(this);
-        List<ShoppingItem> shoppingList = db.getShoppingList();
+    @Override
+    public void onItemSelected(ShoppingItem selected) {
+        Bundle bundle = new Bundle();
+        bundle.putString(NAME_KEY, selected.getName());
+        bundle.putString(DESCRIPTION_KEY, selected.getDescription());
+        bundle.putString(PRICE_KEY, selected.getPrice());
+        bundle.putString(TYPE_KEY, selected.getType());
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        Fragment fragment = DetailFragment.newInstance(bundle);
 
-        shoppingListRecyclerView.setLayoutManager(linearLayoutManager);
-        shoppingListRecyclerView.setAdapter(new ShoppingListAdapter(shoppingList));
-
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.fragment_container, fragment).commit();
     }
 }

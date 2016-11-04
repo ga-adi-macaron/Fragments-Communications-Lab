@@ -1,5 +1,6 @@
 package ly.generalassemb.drewmahrt.shoppinglistdetailview;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,7 +10,7 @@ import java.util.List;
 
 import ly.generalassemb.drewmahrt.shoppinglistdetailview.setup.DBAssetHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ShoppingListFragment.OnItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,16 +21,22 @@ public class MainActivity extends AppCompatActivity {
         DBAssetHelper dbSetup = new DBAssetHelper(MainActivity.this);
         dbSetup.getReadableDatabase();
 
-        //Setup the RecyclerView
-        RecyclerView shoppingListRecyclerView = (RecyclerView) findViewById(R.id.shopping_list_recyclerview);
+        Fragment shoppingListFragment = ShoppingListFragment.newInstance(null, this);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, shoppingListFragment).commit();
+    }
 
-        ShoppingSQLiteOpenHelper db = ShoppingSQLiteOpenHelper.getInstance(this);
-        List<ShoppingItem> shoppingList = db.getShoppingList();
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+    @Override
+    public void onItemSelected(int id) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(DetailFragment.ID_KEY, id);
+        Fragment detailFragment = DetailFragment.newInstance(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .addToBackStack(null)
+                .replace(R.id.fragment_container, detailFragment)
+                .commit();
 
-        shoppingListRecyclerView.setLayoutManager(linearLayoutManager);
-        shoppingListRecyclerView.setAdapter(new ShoppingListAdapter(shoppingList));
 
     }
 }

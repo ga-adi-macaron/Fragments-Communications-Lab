@@ -15,9 +15,11 @@ import java.util.List;
 
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingItemViewHolder> {
     private List<ShoppingItem> mShoppingItems;
+    private ListFragment.OnItemSelectedListener mListener;
 
-    public ShoppingListAdapter(List<ShoppingItem> shoppingItems) {
+    public ShoppingListAdapter(List<ShoppingItem> shoppingItems, ListFragment.OnItemSelectedListener listener) {
         mShoppingItems = shoppingItems;
+        mListener = listener;
     }
 
     @Override
@@ -32,21 +34,10 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingItemViewHo
 
         holder.mNameTextView.setText(currentItem.getName());
 
-        // Add an OnClickListener that launches DetailActivity and passes it the item's ID
         holder.mNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Get a reference to the MainActivity as a Context
-                Context mainActivity = holder.mNameTextView.getContext();
-
-                // Create the intent
-                Intent intent = new Intent(mainActivity, DetailActivity.class);
-
-                // Add the ID as an extra
-                intent.putExtra(DetailActivity.ITEM_ID_KEY, currentItem.getId());
-
-                // Start the detail activity
-                mainActivity.startActivity(intent);
+                mListener.onItemSelected(mShoppingItems.get(holder.getAdapterPosition()));
             }
         });
     }

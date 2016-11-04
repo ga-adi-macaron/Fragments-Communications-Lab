@@ -1,7 +1,5 @@
 package ly.generalassemb.drewmahrt.shoppinglistdetailview;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,18 +13,21 @@ import java.util.List;
 
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingItemViewHolder> {
     private List<ShoppingItem> mShoppingItems;
+    FirstFragment.OnItemSelectedListener mListener;
 
-    public ShoppingListAdapter(List<ShoppingItem> shoppingItems) {
+    public ShoppingListAdapter(List<ShoppingItem> shoppingItems, FirstFragment.OnItemSelectedListener listener) {
         mShoppingItems = shoppingItems;
+        mListener = listener;
     }
 
     @Override
     public ShoppingItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ShoppingItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1,parent,false));
+        return new ShoppingItemViewHolder(LayoutInflater.from(parent.getContext()).
+                inflate(android.R.layout.simple_list_item_1,parent,false));
     }
 
     @Override
-    public void onBindViewHolder(final ShoppingItemViewHolder holder, int position) {
+    public void onBindViewHolder(final ShoppingItemViewHolder holder, final int position) {
 
         final ShoppingItem currentItem = mShoppingItems.get(position);
 
@@ -36,17 +37,10 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingItemViewHo
         holder.mNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Get a reference to the MainActivity as a Context
-                Context mainActivity = holder.mNameTextView.getContext();
-
-                // Create the intent
-                Intent intent = new Intent(mainActivity, DetailActivity.class);
-
-                // Add the ID as an extra
-                intent.putExtra(DetailActivity.ITEM_ID_KEY, currentItem.getId());
-
-                // Start the detail activity
-                mainActivity.startActivity(intent);
+                mListener.onItemSelected(mShoppingItems.get(position).getName(),
+                        mShoppingItems.get(position).getDescription(),
+                        mShoppingItems.get(position).getPrice(),
+                        mShoppingItems.get(position).getType());
             }
         });
     }

@@ -1,15 +1,12 @@
 package ly.generalassemb.drewmahrt.shoppinglistdetailview;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-
-import java.util.List;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 
 import ly.generalassemb.drewmahrt.shoppinglistdetailview.setup.DBAssetHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FirstFragment.OnItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,16 +17,34 @@ public class MainActivity extends AppCompatActivity {
         DBAssetHelper dbSetup = new DBAssetHelper(MainActivity.this);
         dbSetup.getReadableDatabase();
 
-        //Setup the RecyclerView
-        RecyclerView shoppingListRecyclerView = (RecyclerView) findViewById(R.id.shopping_list_recyclerview);
+        Fragment firstFragment = FirstFragment.newInstance(null,this);
 
-        ShoppingSQLiteOpenHelper db = ShoppingSQLiteOpenHelper.getInstance(this);
-        List<ShoppingItem> shoppingList = db.getShoppingList();
+        //Populate the list of planets
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container,firstFragment)
+                .commit();
+    }
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+    @Override
+    public void onItemSelected(String name, String description, String price, String type) {
+        //Replace list fragment with detail fragment
+        //Pass selectedPlanet string to detail fragment in a bundle.
 
-        shoppingListRecyclerView.setLayoutManager(linearLayoutManager);
-        shoppingListRecyclerView.setAdapter(new ShoppingListAdapter(shoppingList));
+        /**
+         * DEĞİŞTİR!
+         */
 
+        Bundle bundle = new Bundle();
+        bundle.putString("name", name);
+        bundle.putString("description", description);
+        bundle.putString("price", price);
+        bundle.putString("type", type);
+        Fragment secondFragment = SecondFragment.newInstance(bundle);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container,secondFragment)
+                .commit();
     }
 }

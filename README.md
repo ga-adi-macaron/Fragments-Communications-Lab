@@ -32,7 +32,7 @@ In this lab, we will be transforming our Grocery List with details to use Fragme
 
 #### Starter code
 
-The [starter code](starter-code) contains the the solution code to the Detail View lab. If your code from that lab was working properly, you may continue using that codebase instead, if you prefer.
+The [starter code](starter-code) contains the solution code to the Detail View lab. If your code from that lab was working properly, you may continue using that codebase instead, if you prefer.
 
 #### Deliverable
 
